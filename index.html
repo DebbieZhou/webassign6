@@ -128,14 +128,14 @@
     <script>
 
         // ASN REQ 1 : replce all of  your config hrere
-            // var config = {
-            //     apiKey: "", // AIzaSyAh1HUyu2zeJ3VcqEFZTLirV29XYunFw_E
-            //     authDomain: "good-d18bd.firebaseapp.com",
-            //     databaseURL: "https://good-d18bd.firebaseio.com",
-            //     projectId: "good-d18bd",
-            //     storageBucket: "good-d18bd.appspot.com",
-            //     messagingSenderId: "183018367198"
-            // };
+              var config = {
+                apiKey: "AIzaSyASQg7_fURUhA3LP3m9Q3zqD3uDOaLIL88",
+                authDomain: "assign6-c258e.firebaseapp.com",
+                databaseURL: "https://assign6-c258e.firebaseio.com",
+                projectId: "assign6-c258e",
+                storageBucket: "assign6-c258e.appspot.com",
+                messagingSenderId: "413672901232"
+                };
         firebase.initializeApp(config);
 
         var db             = firebase.database()                  // class : firebase.database
@@ -203,11 +203,11 @@
                     if ( this.editor.activity_id === null){
                         // ASN REQ 2 : this means we are creating new activity
                         // you should use one of the functions `updateActivity or createActivity` below
-
+                        this.createActivity(this.editor.activity)
                     }else {
                         // ASN REQ 2 : this means we should UPDATE the activity whose id is `activity_id` , with this.editor.activity
                         // you should use one of the functions `updateActivity or createActivity` below
-
+                        this.updateActivity(this.editor.activity_id,this.editor.activity)
                     }
                     $("#activityEditor").modal("hide")
                 },
@@ -220,22 +220,27 @@
                 // C , R , D
                 createActivity : function ( new_activity ){
                     // ASN REQ 2 : push new_activity to activitiesRef. Always handle error!
-
+                    activitiesRef.push(new_activity).catch(errorCallback)
                 },
                 updateActivity : function ( activity_id , activity ){
                     // ASN REQ 2 : update activitiesRef at `activity_id` with data `activity`. Always handle error!
-
+                    activitiesRef.child(activity_id).update(activity).catch(errorCallback)
                 },
                 removeActivity : function ( activity_id ){
                     // ASN REQ 2 : remove activity at `activity_id`. Always handle error!
-
+                    activitiesRef.child(activity_id).remove().catch(errorCallback)
+                     this.$delete( this.data.activities , activity_id)
                 }
             },
 
             created: function created() {
               // ASN REQ 1 :
                   // listen on chages on activities data , and set it to vm.data.activities
-
+                   var vm = this;
+                    activitiesRef.on("value", function (dataSnapshot) {
+                    var msg = dataSnapshot.val();
+                    vm.data.activities = msg;
+                })
               // ASN REQ 3 : detect authentication changes :
                   // if login :
                       // set login user to vm.data.currentUser
